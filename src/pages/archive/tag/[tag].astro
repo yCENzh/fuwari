@@ -1,0 +1,50 @@
+---
+import ArchivePanel from "@components/ArchivePanel.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getSortedPosts } from "@utils/content-utils";
+import { decodePathSegment, encodePathSegment } from "@utils/encoding-utils";
+
+export async function getStaticPaths() {
+	const posts = await getSortedPosts();
+
+	const allTags = posts.reduce<Set<string>>((acc, post) => {
+		for (const tag of post.data.tags) {
+			acc.add(tag);
+		}
+		return acc;
+	}, new Set());
+
+	const allTagsArray = Array.from(allTags);
+
+	const standardPaths = allTagsArray.map((tag) => ({
+		params: {
+			tag: encodePathSegment(tag),
+		},
+		props: {
+			decodedTag: tag.trim(),
+		},
+	}));
+
+	const nonEncodedCJKPaths = allTagsArray
+		.filter((tag) => /[\u3000-\u9fff\uac00-\ud7af\u4e00-\u9faf]/.test(tag))
+		.map((tag) => ({
+			params: {
+				tag: tag.trim(), // Do not encode CJK characters
+			},
+			props: {
+				decodedTag: tag.trim(),
+			},
+		}));
+
+	return [...standardPaths, ...nonEncodedCJKPaths];
+}
+
+const { decodedTag } = Astro.props;
+const tag = decodedTag || decodePathSegment(Astro.params.tag as string);
+---
+
+<MainGridLayout title={i18n(I18nKey.archive)} description={i18n(I18nKey.archive)}>
+    <ArchivePanel tags={[tag]}></ArchivePanel>
+</MainGridLayout>
