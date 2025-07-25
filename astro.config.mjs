@@ -28,7 +28,6 @@ import fuwariLinkCard from "./src/plugins/fuwari-link-card.ts";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 import mdx from "@astrojs/mdx";
 import partytown from "@astrojs/partytown";
-import cloudflare from "@astrojs/cloudflare";
 //import cloudflare from "@astrojs/cloudflare";
 //import mdx from '@astrojs/mdx';
 
@@ -201,5 +200,4 @@ export default defineConfig({
       },
     },
 
-  adapter: cloudflare(),
 });
