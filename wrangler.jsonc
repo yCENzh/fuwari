@@ -1,9 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "fuwari",
+  "name": "my-astro-app",
+  "main": "./dist/_worker.js/index.js",
   // 更新为今天的日期
-  "compatibility_date": "2025-07-04",
+  "compatibility_date": "2025-07-25",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
+    "binding": "ASSETS",
     "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
   }
 }
